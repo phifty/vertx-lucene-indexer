@@ -1,0 +1,4 @@
+{
+  "main": "me.phifty.vertx.index.Module",
+  "auto-redeploy": true
+}
