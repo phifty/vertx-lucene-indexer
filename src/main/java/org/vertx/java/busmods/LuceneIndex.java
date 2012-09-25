@@ -1,4 +1,4 @@
-package me.phifty.vertx.index;
+package org.vertx.java.busmods;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;

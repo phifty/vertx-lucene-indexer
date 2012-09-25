@@ -4,14 +4,15 @@
     <output url="file://$MODULE_DIR$/out" />
     <output-test url="file://$MODULE_DIR$/out/test" />
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/test/src" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/.idea" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="lucene" level="project" />
     <orderEntry type="library" name="junit" level="project" />
+    <orderEntry type="library" name="vertx" level="application" />
   </component>
 </module>
 

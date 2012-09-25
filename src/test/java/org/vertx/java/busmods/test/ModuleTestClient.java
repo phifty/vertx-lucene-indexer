@@ -1,5 +1,6 @@
-package me.phifty.test.vertx.index;
+package org.vertx.java.busmods.test;
 
+import org.vertx.java.busmods.Module;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.JsonArray;
@@ -27,7 +28,7 @@ public class ModuleTestClient extends TestClientBase {
     fields.putString("email", "string");
     configuration.putObject("fields", fields);
 
-    container.deployModule("me.phifty.indexer-v1.0", configuration, 1, new Handler<String>() {
+    container.deployVerticle(Module.class.getName(), configuration, 1, new Handler<String>() {
       @Override
       public void handle(String deploymentId) {
         tu.appReady();

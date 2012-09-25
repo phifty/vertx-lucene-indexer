@@ -1,4 +1,4 @@
-me.phifty.indexer-v1.0
+org.vertx.indexer-v1.0
 ======================
 
 Vert.x module to modify and search a lucene index.

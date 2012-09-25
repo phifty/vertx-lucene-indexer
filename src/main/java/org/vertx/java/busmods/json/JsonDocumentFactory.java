@@ -1,6 +1,6 @@
-package me.phifty.vertx.index.json;
+package org.vertx.java.busmods.json;
 
-import me.phifty.vertx.index.DocumentFactory;
+import org.vertx.java.busmods.DocumentFactory;
 
 /**
  * @author phifty <b.phifty@gmail.com>

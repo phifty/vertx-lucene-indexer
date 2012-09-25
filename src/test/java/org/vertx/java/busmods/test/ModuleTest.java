@@ -1,4 +1,4 @@
-package me.phifty.test.vertx.index;
+package org.vertx.java.busmods.test;
 
 import org.junit.Test;
 import org.vertx.java.framework.TestBase;

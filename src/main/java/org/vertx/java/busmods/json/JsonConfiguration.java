@@ -1,7 +1,7 @@
-package me.phifty.vertx.index.json;
+package org.vertx.java.busmods.json;
 
-import me.phifty.vertx.index.Configuration;
-import me.phifty.vertx.index.DefaultConfiguration;
+import org.vertx.java.busmods.Configuration;
+import org.vertx.java.busmods.DefaultConfiguration;
 import org.vertx.java.core.json.JsonObject;
 
 import java.util.HashMap;
