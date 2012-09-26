@@ -11,7 +11,7 @@ import org.vertx.java.deploy.Verticle;
 
 import java.util.List;
 
-public class Module extends Verticle {
+public class LuceneIndexerModule extends Verticle {
 
   private Configuration configuration;
   private Index index = null;

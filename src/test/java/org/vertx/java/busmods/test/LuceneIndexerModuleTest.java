@@ -3,12 +3,12 @@ package org.vertx.java.busmods.test;
 import org.junit.Test;
 import org.vertx.java.framework.TestBase;
 
-public class ModuleTest extends TestBase {
+public class LuceneIndexerModuleTest extends TestBase {
 
   @Override
   protected void setUp() throws Exception {
     super.setUp();
-    startApp(ModuleTestClient.class.getName());
+    startApp(LuceneIndexerModuleTestClient.class.getName());
   }
 
   @Override

@@ -1,6 +1,6 @@
 package org.vertx.java.busmods.test;
 
-import org.vertx.java.busmods.Module;
+import org.vertx.java.busmods.LuceneIndexerModule;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.JsonArray;
@@ -10,7 +10,7 @@ import org.vertx.java.framework.TestClientBase;
 /**
  * @author phifty <b.phifty@gmail.com>
  */
-public class ModuleTestClient extends TestClientBase {
+public class LuceneIndexerModuleTestClient extends TestClientBase {
 
   @Override
   public void start() {
@@ -28,7 +28,7 @@ public class ModuleTestClient extends TestClientBase {
     fields.putString("email", "string");
     configuration.putObject("fields", fields);
 
-    container.deployVerticle(Module.class.getName(), configuration, 1, new Handler<String>() {
+    container.deployVerticle(LuceneIndexerModule.class.getName(), configuration, 1, new Handler<String>() {
       @Override
       public void handle(String deploymentId) {
         tu.appReady();

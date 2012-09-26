@@ -1,4 +1,4 @@
 {
-  "main": "org.vertx.vertx.index.Module",
+  "main": "org.vertx.java.busmods.LuceneIndexerModule",
   "auto-redeploy": true
 }

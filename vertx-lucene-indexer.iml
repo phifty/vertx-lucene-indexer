@@ -10,9 +10,15 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="lucene" level="project" />
-    <orderEntry type="library" name="junit" level="project" />
-    <orderEntry type="library" name="vertx" level="application" />
+    <orderEntry type="library" name="org.vert-x:vertx-core:1.2.3.final" level="project" />
+    <orderEntry type="library" name="org.vert-x:vertx-platform:1.2.3.final" level="project" />
+    <orderEntry type="library" name="org.vert-x:vertx-testframework:1.2.3.final" level="project" />
+    <orderEntry type="library" name="org.apache.lucene:lucene-core:3.6.1" level="project" />
+    <orderEntry type="library" name="org.apache.lucene:lucene-analyzers:3.6.1" level="project" />
+    <orderEntry type="library" name="org.apache.lucene:lucene-queryparser:3.6.1" level="project" />
+    <orderEntry type="library" name="junit:junit:4.9" level="project" />
+    <orderEntry type="library" name="org.codehaus.groovy:groovy:2.0.4" level="project" />
+    <orderEntry type="library" name="org.mozilla:rhino:1.7R4" level="project" />
   </component>
 </module>
 
