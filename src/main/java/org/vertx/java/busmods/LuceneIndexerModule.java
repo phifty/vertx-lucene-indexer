@@ -1,5 +1,7 @@
 package org.vertx.java.busmods;
 
+import me.phifty.index.Index;
+import me.phifty.index.LuceneIndex;
 import org.vertx.java.busmods.json.JsonConfiguration;
 import org.vertx.java.busmods.json.JsonDocument;
 import org.vertx.java.busmods.json.JsonDocumentFactory;
@@ -38,7 +40,23 @@ public class LuceneIndexerModule extends Verticle {
   }
 
   private void initializeIndex() throws Exception {
-    index = new LuceneIndex<JsonDocument>(configuration, new JsonDocumentFactory());
+    switch (configuration.getStorage()) {
+      case MEMORY:
+        index = new LuceneIndex<JsonDocument>(
+          configuration.getDefaultFieldName(),
+          configuration.getFields(),
+          configuration.getMaximalResults(),
+          new JsonDocumentFactory());
+        break;
+      case FILESYSTEM:
+        index = new LuceneIndex<JsonDocument>(
+          configuration.getPath(),
+          configuration.getDefaultFieldName(),
+          configuration.getFields(),
+          configuration.getMaximalResults(),
+          new JsonDocumentFactory());
+        break;
+    }
   }
 
   private void registerAddHandler() {

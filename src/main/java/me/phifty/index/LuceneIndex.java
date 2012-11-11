@@ -1,4 +1,4 @@
-package org.vertx.java.busmods;
+package me.phifty.index;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -22,13 +22,16 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author phifty <b.phifty@gmail.com>
  */
 public class LuceneIndex<T extends Document> implements Index<T> {
 
-  private Configuration configuration;
+  private String defaultFieldName;
+  private Map<String, FieldType> fields;
+  private Number maximalResults;
   private DocumentFactory<T> documentFactory;
 
   private static RAMDirectory ramDirectory = new RAMDirectory();
@@ -39,11 +42,15 @@ public class LuceneIndex<T extends Document> implements Index<T> {
   private IndexSearcher searcher;
   private QueryParser queryParser;
 
-  public LuceneIndex(Configuration configuration, DocumentFactory<T> documentFactory) throws IOException {
-    this.configuration = configuration;
-    this.documentFactory = documentFactory;
+  public LuceneIndex(String defaultFieldName, Map<String, FieldType> fields, Number maximalResults, DocumentFactory<T> documentFactory) throws IOException {
+    initializeIndexSettings(defaultFieldName, fields, maximalResults, documentFactory);
+    initializeRamDirectory();
+    initializeIndexWriter();
+  }
 
-    initializeDirectory();
+  public LuceneIndex(String path, String defaultFieldName, Map<String, FieldType> fields, Number maximalResults, DocumentFactory<T> documentFactory) throws IOException {
+    initializeIndexSettings(defaultFieldName, fields, maximalResults, documentFactory);
+    initializeFilesystemDirectory(path);
     initializeIndexWriter();
   }
 
@@ -82,7 +89,7 @@ public class LuceneIndex<T extends Document> implements Index<T> {
     try {
       Query query = queryParser.parse(queryText);
 
-      TopDocs results = searcher.search(query, configuration.getMaximalResults().intValue());
+      TopDocs results = searcher.search(query, maximalResults.intValue());
       ScoreDoc[] hits = results.scoreDocs;
 
       ArrayList<T> documents = new ArrayList<T>();
@@ -103,15 +110,19 @@ public class LuceneIndex<T extends Document> implements Index<T> {
     }
   }
 
-  private void initializeDirectory() throws IOException {
-    switch (configuration.getStorage()) {
-      case MEMORY:
-        directory = ramDirectory;
-        break;
-      case FILESYSTEM:
-        directory = FSDirectory.open(new File(configuration.getPath()));
-        break;
-    }
+  private void initializeIndexSettings(String defaultFieldName, Map<String, FieldType> fields, Number maximalResults, DocumentFactory<T> documentFactory) {
+    this.defaultFieldName = defaultFieldName;
+    this.fields = fields;
+    this.maximalResults = maximalResults;
+    this.documentFactory = documentFactory;
+  }
+
+  private void initializeRamDirectory() {
+    directory = ramDirectory;
+  }
+
+  private void initializeFilesystemDirectory(String path) throws IOException {
+    directory = FSDirectory.open(new File(path));
   }
 
   private void initializeIndexWriter() throws IOException {
@@ -121,7 +132,7 @@ public class LuceneIndex<T extends Document> implements Index<T> {
     indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
     writer = new IndexWriter(directory, indexWriterConfig);
 
-    queryParser = new QueryParser(Version.LUCENE_31, configuration.getDefaultFieldName(), analyzer);
+    queryParser = new QueryParser(Version.LUCENE_31, defaultFieldName, analyzer);
   }
 
   private void updateReader() throws IOException {
@@ -152,7 +163,7 @@ public class LuceneIndex<T extends Document> implements Index<T> {
     T result = documentFactory.newDocument();
 
     for (Fieldable field : document.getFields()) {
-      Configuration.FieldType fieldType = configuration.getFields().get(field.name());
+      FieldType fieldType = fields.get(field.name());
 
       switch (fieldType) {
         case NUMERIC:
@@ -170,7 +181,7 @@ public class LuceneIndex<T extends Document> implements Index<T> {
   }
 
   private AbstractField buildField(T document, String key) {
-    Configuration.FieldType fieldType = configuration.getFields().get(key);
+    FieldType fieldType = fields.get(key);
 
     switch (fieldType) {
       case NUMERIC:

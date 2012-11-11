@@ -1,5 +1,6 @@
 package org.vertx.java.busmods.json;
 
+import me.phifty.index.FieldType;
 import org.vertx.java.busmods.Configuration;
 import org.vertx.java.busmods.DefaultConfiguration;
 import org.vertx.java.core.json.JsonObject;

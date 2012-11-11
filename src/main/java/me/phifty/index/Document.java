@@ -1,4 +1,4 @@
-package org.vertx.java.busmods;
+package me.phifty.index;
 
 import java.util.Set;
 

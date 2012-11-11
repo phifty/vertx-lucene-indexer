@@ -1,6 +1,6 @@
 package org.vertx.java.busmods.json;
 
-import org.vertx.java.busmods.Document;
+import me.phifty.index.Document;
 import org.vertx.java.core.json.JsonObject;
 
 import java.util.Set;

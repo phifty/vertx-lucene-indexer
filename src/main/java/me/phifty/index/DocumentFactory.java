@@ -1,4 +1,6 @@
-package org.vertx.java.busmods;
+package me.phifty.index;
+
+import me.phifty.index.Document;
 
 /**
  * @author phifty <b.phifty@gmail.com>

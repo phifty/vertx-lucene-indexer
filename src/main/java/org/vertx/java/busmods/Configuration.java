@@ -1,5 +1,7 @@
 package org.vertx.java.busmods;
 
+import me.phifty.index.FieldType;
+
 import java.util.Map;
 
 /**
@@ -9,10 +11,6 @@ public interface Configuration {
 
   enum Storage {
     MEMORY, FILESYSTEM
-  }
-
-  enum FieldType {
-    NUMERIC, STRING, TEXT
   }
 
   public String getBaseAddress();
