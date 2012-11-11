@@ -29,9 +29,7 @@ import java.util.Map;
  */
 public class LuceneIndex<T extends Document> implements Index<T> {
 
-  private String defaultFieldName;
-  private Map<String, FieldType> fields;
-  private Number maximalResults;
+  private Configuration configuration;
   private DocumentFactory<T> documentFactory;
 
   private static RAMDirectory ramDirectory = new RAMDirectory();
@@ -42,15 +40,10 @@ public class LuceneIndex<T extends Document> implements Index<T> {
   private IndexSearcher searcher;
   private QueryParser queryParser;
 
-  public LuceneIndex(String defaultFieldName, Map<String, FieldType> fields, Number maximalResults, DocumentFactory<T> documentFactory) throws IOException {
-    initializeIndexSettings(defaultFieldName, fields, maximalResults, documentFactory);
-    initializeRamDirectory();
-    initializeIndexWriter();
-  }
-
-  public LuceneIndex(String path, String defaultFieldName, Map<String, FieldType> fields, Number maximalResults, DocumentFactory<T> documentFactory) throws IOException {
-    initializeIndexSettings(defaultFieldName, fields, maximalResults, documentFactory);
-    initializeFilesystemDirectory(path);
+  public LuceneIndex(Configuration configuration, DocumentFactory<T> documentFactory) throws IOException {
+    this.configuration = configuration;
+    this.documentFactory = documentFactory;
+    initializeDirectory();
     initializeIndexWriter();
   }
 
@@ -89,7 +82,7 @@ public class LuceneIndex<T extends Document> implements Index<T> {
     try {
       Query query = queryParser.parse(queryText);
 
-      TopDocs results = searcher.search(query, maximalResults.intValue());
+      TopDocs results = searcher.search(query, configuration.getMaximalResults().intValue());
       ScoreDoc[] hits = results.scoreDocs;
 
       ArrayList<T> documents = new ArrayList<T>();
@@ -110,19 +103,15 @@ public class LuceneIndex<T extends Document> implements Index<T> {
     }
   }
 
-  private void initializeIndexSettings(String defaultFieldName, Map<String, FieldType> fields, Number maximalResults, DocumentFactory<T> documentFactory) {
-    this.defaultFieldName = defaultFieldName;
-    this.fields = fields;
-    this.maximalResults = maximalResults;
-    this.documentFactory = documentFactory;
-  }
-
-  private void initializeRamDirectory() {
-    directory = ramDirectory;
-  }
-
-  private void initializeFilesystemDirectory(String path) throws IOException {
-    directory = FSDirectory.open(new File(path));
+  private void initializeDirectory() throws IOException {
+    switch (configuration.getStorage()) {
+      case MEMORY:
+        directory = ramDirectory;
+        break;
+      case FILESYSTEM:
+        directory = FSDirectory.open(new File(configuration.getPath()));
+        break;
+    }
   }
 
   private void initializeIndexWriter() throws IOException {
@@ -132,7 +121,7 @@ public class LuceneIndex<T extends Document> implements Index<T> {
     indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
     writer = new IndexWriter(directory, indexWriterConfig);
 
-    queryParser = new QueryParser(Version.LUCENE_31, defaultFieldName, analyzer);
+    queryParser = new QueryParser(Version.LUCENE_31, configuration.getDefaultFieldName(), analyzer);
   }
 
   private void updateReader() throws IOException {
@@ -163,7 +152,7 @@ public class LuceneIndex<T extends Document> implements Index<T> {
     T result = documentFactory.newDocument();
 
     for (Fieldable field : document.getFields()) {
-      FieldType fieldType = fields.get(field.name());
+      Configuration.FieldType fieldType = configuration.getFields().get(field.name());
 
       switch (fieldType) {
         case NUMERIC:
@@ -181,7 +170,7 @@ public class LuceneIndex<T extends Document> implements Index<T> {
   }
 
   private AbstractField buildField(T document, String key) {
-    FieldType fieldType = fields.get(key);
+    Configuration.FieldType fieldType = configuration.getFields().get(key);
 
     switch (fieldType) {
       case NUMERIC:

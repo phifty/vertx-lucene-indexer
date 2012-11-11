@@ -40,23 +40,7 @@ public class LuceneIndexerModule extends Verticle {
   }
 
   private void initializeIndex() throws Exception {
-    switch (configuration.getStorage()) {
-      case MEMORY:
-        index = new LuceneIndex<JsonDocument>(
-          configuration.getDefaultFieldName(),
-          configuration.getFields(),
-          configuration.getMaximalResults(),
-          new JsonDocumentFactory());
-        break;
-      case FILESYSTEM:
-        index = new LuceneIndex<JsonDocument>(
-          configuration.getPath(),
-          configuration.getDefaultFieldName(),
-          configuration.getFields(),
-          configuration.getMaximalResults(),
-          new JsonDocumentFactory());
-        break;
-    }
+    index = new LuceneIndex<JsonDocument>(configuration, new JsonDocumentFactory());
   }
 
   private void registerAddHandler() {
