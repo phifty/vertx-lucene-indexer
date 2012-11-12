@@ -1,7 +1,7 @@
 package me.phifty.index.map;
 
-import me.phifty.index.Configuration;
-import me.phifty.index.DefaultConfiguration;
+import me.phifty.index.IndexConfiguration;
+import me.phifty.index.DefaultIndexConfiguration;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,12 +9,12 @@ import java.util.Map;
 /**
  * @author phifty <b.phifty@gmail.com>
  */
-public class MapConfiguration implements Configuration {
+public class MapIndexConfiguration implements IndexConfiguration {
 
-  protected Configuration defaultConfiguration = new DefaultConfiguration();
-  protected Map<String, Object> map;
+  private IndexConfiguration defaultIndexConfiguration = new DefaultIndexConfiguration();
+  private Map<String, Object> map;
 
-  public MapConfiguration(Map<String, Object> map) {
+  public MapIndexConfiguration(Map<String, Object> map) {
     this.map = map;
   }
 
@@ -22,28 +22,28 @@ public class MapConfiguration implements Configuration {
   public Storage getStorage() {
     return map.containsKey("storage") ?
       Storage.valueOf(((String) map.get("storage")).toUpperCase()) :
-      defaultConfiguration.getStorage();
+      defaultIndexConfiguration.getStorage();
   }
 
   @Override
   public String getPath() {
     return map.containsKey("path") ?
       (String)map.get("path") :
-      defaultConfiguration.getPath();
+      defaultIndexConfiguration.getPath();
   }
 
   @Override
   public Number getMaximalResults() {
     return map.containsKey("max_results") ?
       (Number)map.get("max_results") :
-      defaultConfiguration.getMaximalResults();
+      defaultIndexConfiguration.getMaximalResults();
   }
 
   @Override
   public String getDefaultFieldName() {
     return map.containsKey("default_field") ?
       (String)map.get("default_field") :
-      defaultConfiguration.getDefaultFieldName();
+      defaultIndexConfiguration.getDefaultFieldName();
   }
 
   @Override
@@ -56,7 +56,7 @@ public class MapConfiguration implements Configuration {
       }
       return results;
     } else {
-      return defaultConfiguration.getFields();
+      return defaultIndexConfiguration.getFields();
     }
   }
 

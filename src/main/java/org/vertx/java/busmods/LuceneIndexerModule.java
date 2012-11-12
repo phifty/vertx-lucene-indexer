@@ -1,8 +1,10 @@
 package org.vertx.java.busmods;
 
 import me.phifty.index.Index;
+import me.phifty.index.IndexConfiguration;
 import me.phifty.index.LuceneIndex;
-import org.vertx.java.busmods.json.JsonConfiguration;
+import me.phifty.index.map.MapIndexConfiguration;
+import org.vertx.java.busmods.json.JsonModuleConfiguration;
 import org.vertx.java.busmods.json.JsonDocument;
 import org.vertx.java.busmods.json.JsonDocumentFactory;
 import org.vertx.java.core.Handler;
@@ -15,7 +17,8 @@ import java.util.List;
 
 public class LuceneIndexerModule extends Verticle {
 
-  private Configuration configuration;
+  private IndexConfiguration indexConfiguration;
+  private ModuleConfiguration moduleConfiguration;
   private Index index = null;
 
   @Override
@@ -36,16 +39,17 @@ public class LuceneIndexerModule extends Verticle {
   }
 
   private void initializeConfiguration() {
-    configuration = new JsonConfiguration(container.getConfig());
+    indexConfiguration = new MapIndexConfiguration(container.getConfig().toMap());
+    moduleConfiguration = new JsonModuleConfiguration(container.getConfig());
   }
 
   private void initializeIndex() throws Exception {
-    index = new LuceneIndex<JsonDocument>(configuration, new JsonDocumentFactory());
+    index = new LuceneIndex<>(indexConfiguration, new JsonDocumentFactory());
   }
 
   private void registerAddHandler() {
     final Index _index = index;
-    vertx.eventBus().registerHandler(configuration.getBaseAddress() + ".add", new Handler<Message<JsonObject>>() {
+    vertx.eventBus().registerHandler(moduleConfiguration.getBaseAddress() + ".add", new Handler<Message<JsonObject>>() {
       @Override
       public void handle(Message<JsonObject> message) {
         try {
@@ -61,7 +65,7 @@ public class LuceneIndexerModule extends Verticle {
 
   private void registerUpdateHandler() {
     final Index _index = index;
-    vertx.eventBus().registerHandler(configuration.getBaseAddress() + ".update", new Handler<Message<JsonObject>>() {
+    vertx.eventBus().registerHandler(moduleConfiguration.getBaseAddress() + ".update", new Handler<Message<JsonObject>>() {
       @Override
       public void handle(Message<JsonObject> message) {
         try {
@@ -77,7 +81,7 @@ public class LuceneIndexerModule extends Verticle {
 
   private void registerRemoveHandler() {
     final Index _index = index;
-    vertx.eventBus().registerHandler(configuration.getBaseAddress() + ".remove", new Handler<Message<JsonObject>>() {
+    vertx.eventBus().registerHandler(moduleConfiguration.getBaseAddress() + ".remove", new Handler<Message<JsonObject>>() {
       @Override
       public void handle(Message<JsonObject> message) {
         try {
@@ -93,7 +97,7 @@ public class LuceneIndexerModule extends Verticle {
 
   private void registerSearchHandler() {
     final Index _index = index;
-    vertx.eventBus().registerHandler(configuration.getBaseAddress() + ".search", new Handler<Message<JsonObject>>() {
+    vertx.eventBus().registerHandler(moduleConfiguration.getBaseAddress() + ".search", new Handler<Message<JsonObject>>() {
       @Override
       public void handle(Message<JsonObject> message) {
         try {
@@ -109,7 +113,7 @@ public class LuceneIndexerModule extends Verticle {
 
   private void registerClearHandler() {
     final Index _index = index;
-    vertx.eventBus().registerHandler(configuration.getBaseAddress() + ".clear", new Handler<Message<JsonObject>>() {
+    vertx.eventBus().registerHandler(moduleConfiguration.getBaseAddress() + ".clear", new Handler<Message<JsonObject>>() {
       @Override
       public void handle(Message<JsonObject> message) {
         try {

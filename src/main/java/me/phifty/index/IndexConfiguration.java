@@ -5,7 +5,7 @@ import java.util.Map;
 /**
  * @author phifty <b.phifty@gmail.com>
  */
-public interface Configuration {
+public interface IndexConfiguration {
 
   enum Storage {
     MEMORY, FILESYSTEM
